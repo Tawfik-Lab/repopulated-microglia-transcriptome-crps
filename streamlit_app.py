@@ -81,7 +81,9 @@ def plot_single_transcript(transcript_id, gene_data_male, gene_data_female):
     """Plot gene data for a single transcript."""
     
     # Get columns to plot
-    col1, col2 = comparison_select.split(" vs ")
+    group1, group2 = comparison_select.split(" vs ")
+    col1 = f"Fold Change {comparison_select}: {group1}"
+    col2 = f"Fold Change {comparison_select}: {group2}"
 
     # P-values
     p_value_threshold = 0.05
@@ -92,23 +94,23 @@ def plot_single_transcript(transcript_id, gene_data_male, gene_data_female):
     fig = go.Figure()
     fig.add_trace(
         go.Bar(
-            name=col2,
+            name=group2,
             x=["Male", "Female"],
             y=[gene_data_male[col2], gene_data_female[col2]], 
-            error_y=dict(type='data', array=[gene_data_male["SEM "+col2], gene_data_female["SEM "+col2]])
+            # error_y=dict(type='data', array=[gene_data_male["SEM "+col2], gene_data_female["SEM "+col2]])
         )
     )
     fig.add_trace(
         go.Bar(
-            name=col1,
+            name=group1,
             x=["Male", "Female"],
             y=[gene_data_male[col1], gene_data_female[col1]], 
-            error_y=dict(type='data', array=[gene_data_male["SEM "+col1], gene_data_female["SEM "+col1]])
+            # error_y=dict(type='data', array=[gene_data_male["SEM "+col1], gene_data_female["SEM "+col1]])
         )
     )
     star_y = 1.05 * (
         np.max([gene_data_male[col1], gene_data_female[col1], gene_data_male[col2], gene_data_female[col2]])
-        + np.max([gene_data_male["SEM "+col1], gene_data_female["SEM "+col1], gene_data_male["SEM "+col2], gene_data_female["SEM "+col2]])
+        # + np.max([gene_data_male["SEM "+col1], gene_data_female["SEM "+col1], gene_data_male["SEM "+col2], gene_data_female["SEM "+col2]])
     )
     if male_p_value < p_value_threshold:
         fig.add_trace(
@@ -165,23 +167,14 @@ def plot_single_transcript(transcript_id, gene_data_male, gene_data_female):
         font=dict(size=12),
     )
     for trace in fig['data']: 
-        if(trace['name'] not in [col1, col2]):
+        if(trace['name'] not in [group1, group2]):
             trace['showlegend'] = False
     st.plotly_chart(fig, use_container_width=True)
 
-    col1, col2 = st.columns(2)
-
-    # Log fold change
-    with col1:
-        st.write("Log2 of Transcript Count Fold Change:")
-        st.write(f"Male: *{gene_data_male['LogFC ' + comparison_select]}*")
-        st.write(f"Female: *{gene_data_female['LogFC ' + comparison_select]}*")
-
-    # P-values
-    with col2:
-        st.write("P values:")
-        st.write(f"Male: p=*{male_p_value}*")
-        st.write(f"Female: p=*{female_p_value}*")
+    # Show p-values
+    st.write("P values:")
+    st.write(f"Male: p=*{male_p_value}*")
+    st.write(f"Female: p=*{female_p_value}*")
 
 
 # Show a plot for each transcript with this gene symbol
@@ -195,4 +188,4 @@ for transcript_id in sorted_transcript_ids:
     )
     if len(overlapping_transcript_ids) > 1:
         st.markdown("""---""")
-    
+

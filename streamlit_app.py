@@ -8,12 +8,22 @@ import streamlit as st
 
 
 """
-# Repopulated microglia exhibit a unique transcriptome and contribute to sex-independent pain resolution
+# Newly repopulated spinal cord microglia exhibit a unique transcriptome and coincide with sex-independent pain resolution
 
-This data originates from a study in a mouse model of Complex Regional Pain Syndrome that showed microglial
-depletion after injury attenuates pain and improves peripheral symtoms. Lumbar spinal cord microglia were
-FACS-Isolated and RNA-Sequenced to study the transcriptome of the repopulating microglia. Sequencing data was
-analyzed using [Deseq2](https://doi.org/doi:10.18129/B9.bioc.DESeq2).
+These data originate from a study in the tibial fracture/casting mouse model of Complex Regional Pain Syndrome (CRPS) 
+which showed microglial depletion (using the Cx3CR1-creER;iDTR-LSL transgenic mouse) after injury attenuates pain and
+improves peripheral symptoms (hind paw edema and warmth). Lumbar spinal cord microglia were FACS-Isolated
+(CD45mid CD11+ CX3CR1+) and RNA-Sequenced to study the transcriptome of resident and repopulating microglia.
+Sequencing data were analyzed using Deseq2.
+
+The following groups were analyzed and compared:
+
+* Uninjured-Resident = microglia isolated from uninjured mice with resident microglia
+* Injured-Resident = microglia isolated from mice 5 weeks after tibial fracture/casting with resident microglia
+* Uninjured-Repopulated = microglia isolated from uninjured mice with repopulated microglia (2 weeks after depletion/repopulation)
+* Injured-Repopulated = microglia isolated from mice 5 weeks after tibial fracture/casting with repopulated microglia (2 weeks after depletion/repopulation)
+
+[https://www.biorxiv.org/content/10.1101/2022.12.20.521295v1](https://www.biorxiv.org/content/10.1101/2022.12.20.521295v1)
 """
 
 

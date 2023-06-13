@@ -82,6 +82,8 @@ def plot_single_transcript(transcript_id, gene_data_male, gene_data_female):
     
     # Get columns to plot
     col1, col2 = comparison_select.split(" vs ")
+    col1_full = f"FC {comparison_select}: {col1}" 
+    col2_full = f"FC {comparison_select}: {col2}" 
 
     # P-values
     p_value_threshold = 0.05
@@ -94,22 +96,17 @@ def plot_single_transcript(transcript_id, gene_data_male, gene_data_female):
         go.Bar(
             name=col2,
             x=["Male", "Female"],
-            y=[gene_data_male[col2], gene_data_female[col2]], 
-            error_y=dict(type='data', array=[gene_data_male["SEM "+col2], gene_data_female["SEM "+col2]])
+            y=[gene_data_male[col2_full], gene_data_female[col2_full]], 
         )
     )
     fig.add_trace(
         go.Bar(
             name=col1,
             x=["Male", "Female"],
-            y=[gene_data_male[col1], gene_data_female[col1]], 
-            error_y=dict(type='data', array=[gene_data_male["SEM "+col1], gene_data_female["SEM "+col1]])
+            y=[gene_data_male[col1_full], gene_data_female[col1_full]], 
         )
     )
-    star_y = 1.05 * (
-        np.max([gene_data_male[col1], gene_data_female[col1], gene_data_male[col2], gene_data_female[col2]])
-        + np.max([gene_data_male["SEM "+col1], gene_data_female["SEM "+col1], gene_data_male["SEM "+col2], gene_data_female["SEM "+col2]])
-    )
+    star_y = 1.05 * np.max([gene_data_male[col1_full], gene_data_female[col1_full], gene_data_male[col2_full], gene_data_female[col2_full]])
     if male_p_value < p_value_threshold:
         fig.add_trace(
             go.Scatter(
@@ -161,7 +158,7 @@ def plot_single_transcript(transcript_id, gene_data_male, gene_data_female):
     fig.update_layout(
         barmode='group',
         title_text=f"{gene_select} ({transcript_id})",
-        yaxis_title="Normalized Transcript Counts",
+        yaxis_title="Transcript Count Fold Change",
         font=dict(size=12),
     )
     for trace in fig['data']: 
@@ -169,19 +166,10 @@ def plot_single_transcript(transcript_id, gene_data_male, gene_data_female):
             trace['showlegend'] = False
     st.plotly_chart(fig, use_container_width=True)
 
-    col1, col2 = st.columns(2)
-
-    # Log fold change
-    with col1:
-        st.write("Log2 of Transcript Count Fold Change:")
-        st.write(f"Male: *{gene_data_male['LogFC ' + comparison_select]}*")
-        st.write(f"Female: *{gene_data_female['LogFC ' + comparison_select]}*")
-
-    # P-values
-    with col2:
-        st.write("P values:")
-        st.write(f"Male: p=*{male_p_value}*")
-        st.write(f"Female: p=*{female_p_value}*")
+    # Show exact p-values
+    st.write("P values:")
+    st.write(f"Male: p=*{male_p_value}*")
+    st.write(f"Female: p=*{female_p_value}*")
 
 
 # Show a plot for each transcript with this gene symbol

@@ -27,7 +27,7 @@ The following groups were analyzed and compared:
 """
 
 
-@st.experimental_singleton
+@st.cache_data
 def get_data_male():
     """Load the male data, and cache it."""
     return pd.read_csv(
@@ -35,7 +35,7 @@ def get_data_male():
     )
 
 
-@st.experimental_singleton
+@st.cache_data
 def get_data_female():
     """Load the female data, and cache it."""
     return pd.read_csv(
